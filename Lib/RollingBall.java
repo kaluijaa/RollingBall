@@ -1,13 +1,24 @@
 package Lib;
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 
-public class RollingBall extends JPanel{  
+public class RollingBall extends JPanel implements ActionListener {  
 
     private int ballX = 100;
     private int ballY = 100;
     private int ballSize = 80;
-    private double angle = 0; 
+    private int speed = 3;
+    private double angle = 0;
+
+    private Timer timer;   
+
+    public RollingBall() {
+        this.setBackground(new Color(236, 236, 236));
+        timer = new Timer(15, this);
+        timer.start();   
+    }
 
     @Override
     public void paintComponent(Graphics g) {
@@ -27,5 +38,23 @@ public class RollingBall extends JPanel{
 
         g2.setColor(Color.BLACK);
         g2.drawOval(x, y, size, size);
+    }
+
+    @Override
+    public void actionPerformed(ActionEvent e) {
+
+        ballX -= speed;
+
+        if (ballX + ballSize < 0) {
+            ballX = getWidth();
+        }
+
+        double radius = ballSize / 2.0;
+        double deltaAngle = Math.toDegrees(speed / radius);
+        angle -= deltaAngle;
+        if (angle < 0) angle += 360;
+        if (angle >= 360) angle -= 360;
+
+        repaint();
     }
 }
